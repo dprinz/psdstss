@@ -3,10 +3,14 @@ package com.angrosia.psdstss;
 import com.angrosia.psdstss.model.PsdFile;
 import com.angrosia.psdstss.model.PsdFileContent.Slice;
 import com.angrosia.psdstss.model.PsdFileContent.SlicesResource;
+import com.angrosia.psdstss.writer.CssWriter;
+import com.angrosia.psdstss.writer.LessWriter;
+import com.angrosia.psdstss.writer.StylesheetWriter;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,10 +50,14 @@ public class sliceExtractor {
 
         if (psdFiles.isEmpty()) {
             File[] fileScan = finder(System.getProperty("user.dir"));
-            for (int i = 0; i < fileScan.length; i++) {
-                psdFiles.add(fileScan[i]);
-            }
+            Collections.addAll(psdFiles, fileScan);
         }
+
+        if (psdFiles.isEmpty()) {
+            throw new Exception("There is no PSD-File to parse");
+        }
+
+        StylesheetWriter stylesheetWriter = getStylesheetWriter(psdFiles.get(0), prefix);
 
         for (File psdFile : psdFiles) {
             System.out.println("Parsing File: " + psdFile.getName());
@@ -62,6 +70,7 @@ public class sliceExtractor {
             for (Slice slice : slicesResource.getSlices()) {
                 if (slice.getGroupId() > 0 && !slice.getName().isEmpty()) {
                     System.out.println(slice.getName());
+                    stylesheetWriter.writeSlice(slice);
                     if (verbose) {
                         System.out.println("  Url:      " + slice.getUrl());
                         System.out.println("  Target:   " + slice.getTarget());
@@ -76,12 +85,28 @@ public class sliceExtractor {
         }
     }
 
+    private static StylesheetWriter getStylesheetWriter(File outputPath, String prefix) throws IllegalArgumentException {
+        StylesheetWriter stylesheetWriter;
+        switch (format) {
+            case FORMAT_CSS:
+                stylesheetWriter = new CssWriter(outputPath, prefix);
+                break;
+            case FORMAT_LESS:
+                stylesheetWriter = new LessWriter(outputPath, prefix);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown Format");
+        }
+
+        return stylesheetWriter;
+    }
+
     private static void setupHelp(String[] args) {
-        Pattern patternHelp = Pattern.compile("^[-]{1,}h(elp)*$");
+        Pattern patternHelp = Pattern.compile("^[-]+h(elp)*$");
 
         // help needed ?
-        for (int i = 0; i < args.length; i++) {
-            Matcher matcher = patternHelp.matcher(args[i]);
+        for (String arg : args) {
+            Matcher matcher = patternHelp.matcher(arg);
             if (matcher.matches()) {
                 printHelp();
                 System.exit(0);
@@ -91,39 +116,40 @@ public class sliceExtractor {
 
     private static void setupParams(String[] args) {
         Pattern patternInputFile = Pattern.compile("^[^-].+");
-        Pattern patternFormat = Pattern.compile("^[-]{1,}f(ormat)*$");
-        Pattern patternOutput = Pattern.compile("^[-]{1,}o(utput)*$");
-        Pattern patternPrefix = Pattern.compile("^[-]{1,}p(refix)*$");
-        Pattern patternVerbose = Pattern.compile("^[-]{1,}v(erbose)*$");
+        Pattern patternFormat = Pattern.compile("^[-]+f(ormat)*$");
+        Pattern patternOutput = Pattern.compile("^[-]+o(utput)*$");
+        Pattern patternPrefix = Pattern.compile("^[-]+p(refix)*$");
+        Pattern patternVerbose = Pattern.compile("^[-]+v(erbose)*$");
         Pattern patternCssClassname = Pattern.compile("-?[_a-zA-Z]+[_a-zA-Z0-9-]*");
 
         byte inputMode = INPUT_FILES;
-        for (int i = 0; i < args.length; i++) {
+
+        for (String arg : args) {
             if (inputMode == INPUT_FILES) {
-                Matcher matcher = patternInputFile.matcher(args[i]);
+                Matcher matcher = patternInputFile.matcher(arg);
                 if (matcher.matches()) {
-                    psdFiles.add(new File(System.getProperty("user.dir") + File.separator + args[i]));
+                    psdFiles.add(new File(System.getProperty("user.dir") + File.separator + arg));
                 } else {
                     inputMode = INPUT_DETECT;
                 }
             }
             if (inputMode == INPUT_DETECT) {
-                Matcher matcherVerbose = patternVerbose.matcher(args[i]);
+                Matcher matcherVerbose = patternVerbose.matcher(arg);
                 if (matcherVerbose.matches()) {
                     verbose = true;
                     continue;
                 }
-                Matcher matcherFormat = patternFormat.matcher(args[i]);
+                Matcher matcherFormat = patternFormat.matcher(arg);
                 if (matcherFormat.matches()) {
                     inputMode = INPUT_FORMAT;
                     continue;
                 }
-                Matcher matcherOutput = patternOutput.matcher(args[i]);
+                Matcher matcherOutput = patternOutput.matcher(arg);
                 if (matcherOutput.matches()) {
                     inputMode = INPUT_OUTPUT;
                     continue;
                 }
-                Matcher matcherPrefix = patternPrefix.matcher(args[i]);
+                Matcher matcherPrefix = patternPrefix.matcher(arg);
                 if (matcherPrefix.matches()) {
                     inputMode = INPUT_PREFIX;
                     continue;
@@ -131,21 +157,21 @@ public class sliceExtractor {
             }
             switch (inputMode) {
                 case INPUT_FORMAT:
-                    if (args[i].equals("css")) {
+                    if (arg.equals("css")) {
                         format = FORMAT_CSS;
-                    } else if (args[i].equals("less")) {
+                    } else if (arg.equals("less")) {
                         format = FORMAT_LESS;
                     } else {
                         throw new IllegalArgumentException("Only 'css' and 'less' are known formats.");
                     }
                     break;
                 case INPUT_OUTPUT:
-                    output = args[i];
+                    output = arg;
                     break;
                 case INPUT_PREFIX:
-                    Matcher matcherCssClassname = patternCssClassname.matcher(args[i]);
+                    Matcher matcherCssClassname = patternCssClassname.matcher(arg);
                     if (matcherCssClassname.matches()) {
-                        prefix = args[i];
+                        prefix = arg;
                     } else {
                         throw new IllegalArgumentException("This stylesheet class is not valid.");
                     }
@@ -154,6 +180,14 @@ public class sliceExtractor {
             if (inputMode != INPUT_FILES) {
                 inputMode = INPUT_DETECT;
             }
+        }
+        switch (inputMode) {
+            case INPUT_FORMAT:
+                throw new IllegalArgumentException("You didn't specify a format");
+            case INPUT_OUTPUT:
+                throw new IllegalArgumentException("You didn't specify a output file");
+            case INPUT_PREFIX:
+                throw new IllegalArgumentException("You didn't specify a class prefix");
         }
     }
 

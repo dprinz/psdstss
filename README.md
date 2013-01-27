@@ -3,11 +3,30 @@ PSD Slices To StyleSheet (converter)
 
 Extract the Slices from a PSD File and create a CSS or LESS stylesheet class structure.
 
+## Usage
+
+    psdstss [PSD-File]* [-f css|less] [-o OUTPUT-File] [-p class-prefix]
+
+    You can use more PSD-Files or leave it and let the script scan for all
+    PSD-Files in folder. From slices the <name> will be the <css-class>,
+    the <target> will be the <css-file>, in <alt-tags> are the options!
+    Alt-Tag-Options can be: repeat-x, repeat-y, repeat.
+
+      -f, --format    Set output format (css, less). Default: less
+      -o, --output    The output file, if you don't want to let the script decide.
+      -p, --prefix    Set the prefix of the classes. Default: sprite-
+      -v, --verbose   Show information about files and parsing etc.
+
+## Example
+
+    psdstss sprite.psd -f less -p org-logo-
+
 ## Version history
 
-alpha state
+alpha state - *not working*
 
-v1.0 - just parse the psd file
+v0.2 - create file writer
+v0.1 - just parse the psd file
 
 
 ## Copyright and license
