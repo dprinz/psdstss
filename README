@@ -1,2 +1,20 @@
-This file was created by IntelliJ IDEA 12.0.2 for binding GitHub repository
-This file was modified by IntelliJ IDEA 12.0.2 for binding GitHub repository
+*PSDS*lices*T*o*S*tyle*S*heet converter
+=======================================
+
+   Copyright 2013 René Peschmann
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+alpha state
+v1.0 - just parse the psd file
+
