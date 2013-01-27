@@ -25,9 +25,8 @@ Extract the Slices from a PSD File and create a CSS or LESS stylesheet class str
 
 alpha state - *not working*
 
-v0.2 - create file writer
-v0.1 - just parse the psd file
-
+- v0.2 - create file writer
+- v0.1 - just parse the psd file
 
 ## Copyright and license
 
