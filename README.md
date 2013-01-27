@@ -1,6 +1,8 @@
 PSD Slices To StyleSheet (converter)
 ====================================
 
+Extract the Slices from a PSD File and create a CSS or LESS stylesheet class structure.
+
 ## Version history
 
 alpha state
