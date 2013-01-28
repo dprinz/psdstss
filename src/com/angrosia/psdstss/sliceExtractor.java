@@ -59,29 +59,33 @@ public class sliceExtractor {
 
         StylesheetWriter stylesheetWriter = getStylesheetWriter(psdFiles.get(0), prefix);
 
-        for (File psdFile : psdFiles) {
-            System.out.println("Parsing File: " + psdFile.getName());
-            PsdFile psd = new PsdFile(psdFile);
-            SlicesResource slicesResource = psd.getSliceResource();
-            if (verbose) {
-                System.out.println("  Size: " + (slicesResource.getRight() - slicesResource.getLeft()) +
-                        " x " + (slicesResource.getBottom() - slicesResource.getTop()));
-            }
-            for (Slice slice : slicesResource.getSlices()) {
-                if (slice.getGroupId() > 0 && !slice.getName().isEmpty()) {
-                    System.out.println(slice.getName());
-                    stylesheetWriter.writeSlice(slice);
-                    if (verbose) {
-                        System.out.println("  Url:      " + slice.getUrl());
-                        System.out.println("  Target:   " + slice.getTarget());
-                        System.out.println("  Message:  " + slice.getMessage());
-                        System.out.println("  AltTag:   " + slice.getAltTag());
-                        System.out.println("  Position: " + slice.getLeft() + ", " + slice.getTop());
-                        System.out.println("  Size:     " + (slice.getRight() - slice.getLeft()) +
-                                " x " + (slice.getBottom() - slice.getTop()));
+        try {
+            for (File psdFile : psdFiles) {
+                System.out.println("Parsing File: " + psdFile.getName());
+                PsdFile psd = new PsdFile(psdFile);
+                SlicesResource slicesResource = psd.getSliceResource();
+                if (verbose) {
+                    System.out.println("  Size: " + (slicesResource.getRight() - slicesResource.getLeft()) +
+                            " x " + (slicesResource.getBottom() - slicesResource.getTop()));
+                }
+                for (Slice slice : slicesResource.getSlices()) {
+                    if (slice.getGroupId() > 0 && !slice.getName().isEmpty()) {
+                        System.out.println(slice.getName());
+                        if (verbose) {
+                            System.out.println("  Url:      " + slice.getUrl());
+                            System.out.println("  Target:   " + slice.getTarget());
+                            System.out.println("  Message:  " + slice.getMessage());
+                            System.out.println("  AltTag:   " + slice.getAltTag());
+                            System.out.println("  Position: " + slice.getLeft() + ", " + slice.getTop());
+                            System.out.println("  Size:     " + (slice.getRight() - slice.getLeft()) +
+                                    " x " + (slice.getBottom() - slice.getTop()));
+                        }
+                        stylesheetWriter.writeSlice(slice);
                     }
                 }
             }
+        } finally {
+            stylesheetWriter.done();
         }
     }
 
