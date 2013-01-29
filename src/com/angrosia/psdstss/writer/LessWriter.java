@@ -68,7 +68,7 @@ public class LessWriter extends StylesheetWriter{
         String outputFile = getOutputFilename(slice);
 
         if (verbose) {
-            System.out.println("Write to " + outputFile + ": " + cssClass);
+            System.out.println("Write to " + outputFile + ": " + className);
         }
 
         writeLessFile(new File(outputPath + File.separator + outputFile), cssClass, true);
