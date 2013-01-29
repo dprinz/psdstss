@@ -2,19 +2,24 @@ package com.angrosia.psdstss.writer;
 
 import com.angrosia.psdstss.model.PsdFileContent.Slice;
 
-import java.io.File;
 import java.io.IOException;
 
 public abstract class StylesheetWriter {
-    protected File outputPath;
+    protected String outputPath;
     protected String classPrefix;
 
-    protected StylesheetWriter(File outputPath, String classPrefix) {
+    protected boolean verbose = false;
+
+    protected StylesheetWriter(String outputPath, String classPrefix) {
         this.outputPath = outputPath;
-        this.classPrefix = classPrefix;
+        this.classPrefix = classPrefix.replaceAll("[^A-Za-z0-9-_]", "");
     }
 
-    public abstract void writeSlice(Slice slice) throws IOException;
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    public abstract void writeSlice(Slice slice) throws Exception;
 
     public abstract void done() throws IOException;
 }

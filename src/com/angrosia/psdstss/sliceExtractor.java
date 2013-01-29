@@ -19,14 +19,12 @@ public class sliceExtractor {
     private static final byte INPUT_FILES = 0;
     private static final byte INPUT_DETECT = 1;
     private static final byte INPUT_FORMAT = 2;
-    private static final byte INPUT_OUTPUT = 3;
     private static final byte INPUT_PREFIX = 4;
 
     private static final byte FORMAT_CSS = 0;
     private static final byte FORMAT_LESS = 1;
 
     private static byte format = FORMAT_LESS;
-    private static String output = null;
     private static String prefix = "sprite-";
     private static boolean verbose = false;
 
@@ -57,7 +55,8 @@ public class sliceExtractor {
             throw new Exception("There is no PSD-File to parse");
         }
 
-        StylesheetWriter stylesheetWriter = getStylesheetWriter(psdFiles.get(0), prefix);
+        StylesheetWriter stylesheetWriter = getStylesheetWriter(psdFiles.get(0).getParent(), prefix);
+        stylesheetWriter.setVerbose(verbose);
 
         try {
             for (File psdFile : psdFiles) {
@@ -70,7 +69,7 @@ public class sliceExtractor {
                 }
                 for (Slice slice : slicesResource.getSlices()) {
                     if (slice.getGroupId() > 0 && !slice.getName().isEmpty()) {
-                        System.out.println(slice.getName());
+                        System.out.println("Slice: " + slice.getName());
                         if (verbose) {
                             System.out.println("  Url:      " + slice.getUrl());
                             System.out.println("  Target:   " + slice.getTarget());
@@ -89,7 +88,7 @@ public class sliceExtractor {
         }
     }
 
-    private static StylesheetWriter getStylesheetWriter(File outputPath, String prefix) throws IllegalArgumentException {
+    private static StylesheetWriter getStylesheetWriter(String outputPath, String prefix) throws IllegalArgumentException {
         StylesheetWriter stylesheetWriter;
         switch (format) {
             case FORMAT_CSS:
@@ -121,7 +120,6 @@ public class sliceExtractor {
     private static void setupParams(String[] args) {
         Pattern patternInputFile = Pattern.compile("^[^-].+");
         Pattern patternFormat = Pattern.compile("^[-]+f(ormat)*$");
-        Pattern patternOutput = Pattern.compile("^[-]+o(utput)*$");
         Pattern patternPrefix = Pattern.compile("^[-]+p(refix)*$");
         Pattern patternVerbose = Pattern.compile("^[-]+v(erbose)*$");
         Pattern patternCssClassname = Pattern.compile("-?[_a-zA-Z]+[_a-zA-Z0-9-]*");
@@ -148,11 +146,6 @@ public class sliceExtractor {
                     inputMode = INPUT_FORMAT;
                     continue;
                 }
-                Matcher matcherOutput = patternOutput.matcher(arg);
-                if (matcherOutput.matches()) {
-                    inputMode = INPUT_OUTPUT;
-                    continue;
-                }
                 Matcher matcherPrefix = patternPrefix.matcher(arg);
                 if (matcherPrefix.matches()) {
                     inputMode = INPUT_PREFIX;
@@ -168,9 +161,6 @@ public class sliceExtractor {
                     } else {
                         throw new IllegalArgumentException("Only 'css' and 'less' are known formats.");
                     }
-                    break;
-                case INPUT_OUTPUT:
-                    output = arg;
                     break;
                 case INPUT_PREFIX:
                     Matcher matcherCssClassname = patternCssClassname.matcher(arg);
@@ -188,8 +178,6 @@ public class sliceExtractor {
         switch (inputMode) {
             case INPUT_FORMAT:
                 throw new IllegalArgumentException("You didn't specify a format");
-            case INPUT_OUTPUT:
-                throw new IllegalArgumentException("You didn't specify a output file");
             case INPUT_PREFIX:
                 throw new IllegalArgumentException("You didn't specify a class prefix");
         }
@@ -200,14 +188,13 @@ public class sliceExtractor {
             "psdstss 1.0.0 - (C) 2013 René Peschmann\r\n" +
             "Released under the Apache License, Version 2.0.\r\n\r\n" +
             "Extract slices from Photoshop psd to stylesheets.\r\n" +
-            "Usage: psdstss [PSD-File]* [-f css|less] [-o OUTPUT-File] [-p class-prefix]\r\n" +
+            "Usage: psdstss [PSD-File]* [-f css|less] [-p class-prefix]\r\n" +
             "You can use more PSD-Files or leave it and let the script scan for all\r\n" +
             "PSD-Files in folder. From slices the <name> will be the <css-class>,\r\n" +
             "the <target> will be the <css-file>, in <alt-tags> are the options!\r\n" +
             "Alt-Tag-Options can be: repeat-x, repeat-y, repeat.\r\n\r\n" +
             "  -h, --help      Show this help.\r\n" +
             "  -f, --format    Set output format (css, less). Default: less\r\n" +
-            "  -o, --output    The output file, if you don't want to let the script decide.\r\n" +
             "  -p, --prefix    Set the prefix of the classes. Default: sprite-\r\n" +
             "  -v, --verbose   Show information about files and parsing etc.\r\n\r\n" +
             "Example: psdstss sprite.psd -f less -p org-logo-"

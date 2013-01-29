@@ -5,7 +5,7 @@ Extract the Slices from a PSD File and create a CSS or LESS stylesheet class str
 
 ## Usage
 
-    psdstss [PSD-File]* [-f css|less] [-o OUTPUT-File] [-p class-prefix]
+    psdstss [PSD-File]* [-f css|less] [-p class-prefix]
 
     You can use more PSD-Files or leave it and let the script scan for all
     PSD-Files in folder. From slices the <name> will be the <css-class>,
@@ -13,7 +13,6 @@ Extract the Slices from a PSD File and create a CSS or LESS stylesheet class str
     Alt-Tag-Options can be: repeat-x, repeat-y, repeat.
 
       -f, --format    Set output format (css, less). Default: less
-      -o, --output    The output file, if you don't want to let the script decide.
       -p, --prefix    Set the prefix of the classes. Default: sprite-
       -v, --verbose   Show information about files and parsing etc.
 
@@ -22,6 +21,10 @@ Extract the Slices from a PSD File and create a CSS or LESS stylesheet class str
     psdstss sprite.psd -f less -p org-logo-
 
 ## Version history
+
+beta state - *working*
+
+- v1.0 - add less writer
 
 alpha state - *not working*
 

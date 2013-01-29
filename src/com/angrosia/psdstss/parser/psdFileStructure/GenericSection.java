@@ -10,6 +10,7 @@ public class GenericSection {
 
     public void skipColorModeDataSection(PsdInputStream stream) throws IOException {
         Integer colorModeDataLength = stream.readInt();
+        //noinspection ResultOfMethodCallIgnored
         stream.skip(colorModeDataLength);
     }
 

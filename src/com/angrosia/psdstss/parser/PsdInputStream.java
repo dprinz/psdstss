@@ -82,6 +82,7 @@ public class PsdInputStream extends InputStream {
 
     public String readAsciiString(int length) throws IOException {
         byte[] bytes = new byte[length];
+        //noinspection ResultOfMethodCallIgnored
         read(bytes);
         return new String(bytes, "ISO-8859-1");
     }
@@ -104,6 +105,7 @@ public class PsdInputStream extends InputStream {
 
     public String readUnicodeString(int length) throws IOException {
         byte[] bytes = new byte[length * 2];
+        //noinspection ResultOfMethodCallIgnored
         read(bytes);
         return new String(bytes, "UTF-16");
     }
