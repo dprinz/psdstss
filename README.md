@@ -9,8 +9,7 @@ Extract the Slices from a PSD File and create a CSS or LESS stylesheet class str
 
     You can use more PSD-Files or leave it and let the script scan for all
     PSD-Files in folder. From slices the <name> will be the <css-class>,
-    the <target> will be the <css-file>, in <alt-tags> are the options!
-    Alt-Tag-Options can be: repeat-x, repeat-y, repeat.
+    the <target> will be the <css-file>, in <alt-tags> are the options.
 
       -f, --format    Set output format (css, less). Default: less
       -p, --prefix    Set the prefix of the classes. Default: sprite-
@@ -24,7 +23,8 @@ Extract the Slices from a PSD File and create a CSS or LESS stylesheet class str
 
 beta state - *working*
 
-- v1.0 - add less writer
+- v0.4 - add css writer
+- v0.3 - add less writer
 
 alpha state - *not working*
 

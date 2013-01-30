@@ -12,10 +12,8 @@ import java.util.regex.Pattern;
 
 public class LessWriter extends StylesheetWriter{
     private String basicFilename = "basic.less";
-
     private boolean isFirstSlice = true;
     private Map<String, FileWriter> lessFiles = new HashMap<String, FileWriter>();
-
     private Pattern cssClassPattern = Pattern.compile("-?[_a-zA-Z]+[_a-zA-Z0-9-]*");
 
     public LessWriter(String directory, String prefix) {

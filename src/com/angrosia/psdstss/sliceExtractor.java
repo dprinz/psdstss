@@ -69,6 +69,7 @@ public class sliceExtractor {
                 }
                 for (Slice slice : slicesResource.getSlices()) {
                     if (slice.getGroupId() > 0 && !slice.getName().isEmpty()) {
+                        System.out.println();
                         System.out.println("Slice: " + slice.getName());
                         if (verbose) {
                             System.out.println("  Url:      " + slice.getUrl());
@@ -191,8 +192,7 @@ public class sliceExtractor {
             "Usage: psdstss [PSD-File]* [-f css|less] [-p class-prefix]\r\n" +
             "You can use more PSD-Files or leave it and let the script scan for all\r\n" +
             "PSD-Files in folder. From slices the <name> will be the <css-class>,\r\n" +
-            "the <target> will be the <css-file>, in <alt-tags> are the options!\r\n" +
-            "Alt-Tag-Options can be: repeat-x, repeat-y, repeat.\r\n\r\n" +
+            "the <target> will be the <css-file>, in <alt-tags> are the options.\r\n\r\n" +
             "  -h, --help      Show this help.\r\n" +
             "  -f, --format    Set output format (css, less). Default: less\r\n" +
             "  -p, --prefix    Set the prefix of the classes. Default: sprite-\r\n" +
