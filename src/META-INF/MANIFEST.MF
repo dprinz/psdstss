@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Java-Bean: com.angrosia.psdstss.sliceExtractor
+Main-Class: com.angrosia.psdstss.sliceExtractor
 

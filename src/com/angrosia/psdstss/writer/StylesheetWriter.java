@@ -9,6 +9,7 @@ public abstract class StylesheetWriter {
     protected String classPrefix;
 
     protected boolean verbose = false;
+    protected boolean htmlCreate = false;
 
     protected StylesheetWriter(String outputPath, String classPrefix) {
         this.outputPath = outputPath;
@@ -17,6 +18,10 @@ public abstract class StylesheetWriter {
 
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
+    }
+
+    public void setHtmlCreate(boolean htmlCreate) {
+        this.htmlCreate = htmlCreate;
     }
 
     public abstract void writeSlice(Slice slice) throws Exception;

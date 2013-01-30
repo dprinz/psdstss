@@ -26,6 +26,7 @@ public class sliceExtractor {
 
     private static byte format = FORMAT_LESS;
     private static String prefix = "sprite-";
+    private static boolean htmlCreate = false;
     private static boolean verbose = false;
 
     private static List<File> psdFiles = new ArrayList<File>();
@@ -57,6 +58,7 @@ public class sliceExtractor {
 
         StylesheetWriter stylesheetWriter = getStylesheetWriter(psdFiles.get(0).getParent(), prefix);
         stylesheetWriter.setVerbose(verbose);
+        stylesheetWriter.setHtmlCreate(htmlCreate);
 
         try {
             for (File psdFile : psdFiles) {
@@ -120,9 +122,10 @@ public class sliceExtractor {
 
     private static void setupParams(String[] args) {
         Pattern patternInputFile = Pattern.compile("^[^-].+");
-        Pattern patternFormat = Pattern.compile("^[-]+f(ormat)*$");
-        Pattern patternPrefix = Pattern.compile("^[-]+p(refix)*$");
-        Pattern patternVerbose = Pattern.compile("^[-]+v(erbose)*$");
+        Pattern patternFormat = Pattern.compile("^[-]+f(ormat)?$");
+        Pattern patternPrefix = Pattern.compile("^[-]+p(refix)?$");
+        Pattern patternVerbose = Pattern.compile("^[-]+v(erbose)?$");
+        Pattern patternHtml = Pattern.compile("^[-]+html$");
         Pattern patternCssClassname = Pattern.compile("-?[_a-zA-Z]+[_a-zA-Z0-9-]*");
 
         byte inputMode = INPUT_FILES;
@@ -140,6 +143,11 @@ public class sliceExtractor {
                 Matcher matcherVerbose = patternVerbose.matcher(arg);
                 if (matcherVerbose.matches()) {
                     verbose = true;
+                    continue;
+                }
+                Matcher matcherHtml = patternHtml.matcher(arg);
+                if (matcherHtml.matches()) {
+                    htmlCreate = true;
                     continue;
                 }
                 Matcher matcherFormat = patternFormat.matcher(arg);
@@ -196,6 +204,7 @@ public class sliceExtractor {
             "  -h, --help      Show this help.\r\n" +
             "  -f, --format    Set output format (css, less). Default: less\r\n" +
             "  -p, --prefix    Set the prefix of the classes. Default: sprite-\r\n" +
+            //"      --html      Create a html site for testing the sprites.\r\n" +
             "  -v, --verbose   Show information about files and parsing etc.\r\n\r\n" +
             "Example: psdstss sprite.psd -f less -p org-logo-"
         );
