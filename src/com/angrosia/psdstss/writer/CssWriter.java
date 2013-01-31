@@ -13,8 +13,10 @@ import java.util.regex.Pattern;
 public class CssWriter extends StylesheetWriter {
     private String basicFilename = "global.css";
 
-    private Map<String, FileWriter> lessFiles = new HashMap<String, FileWriter>();
+    private Map<String, FileWriter> cssFiles = new HashMap<String, FileWriter>();
     private Pattern cssClassPattern = Pattern.compile("-?[_a-zA-Z]+[_a-zA-Z0-9-]*");
+
+    private HtmlFileWriter htmlFileWriter = null;
 
     public CssWriter(String directory, String prefix) {
         super(directory, prefix);
@@ -23,12 +25,12 @@ public class CssWriter extends StylesheetWriter {
     private void writeCssFile(File file, String content) throws IOException {
         String filename = file.getName();
         FileWriter fileWriter;
-        if (!lessFiles.containsKey(filename)) {
+        if (!cssFiles.containsKey(filename)) {
             fileWriter = new FileWriter(file.getCanonicalFile());
-            lessFiles.put(filename, fileWriter);
+            cssFiles.put(filename, fileWriter);
 
         } else {
-            fileWriter = lessFiles.get(filename);
+            fileWriter = cssFiles.get(filename);
         }
 
         fileWriter.write(content);
@@ -46,7 +48,7 @@ public class CssWriter extends StylesheetWriter {
         }
 
         String cssClass = "." + className + " {\r\n" +
-                "    background-image: url('/images/sprite.png');\r\n" +
+                "    background-image: url('sprite.png');\r\n" +
                 "    background-position: -" + slice.getLeft() + "px -" + slice.getTop() + "px;\r\n" +
                 "    height: " + sliceHeight + "px;\r\n" +
                 "    width: " + sliceWidth + "px;\r\n" +
@@ -57,8 +59,18 @@ public class CssWriter extends StylesheetWriter {
         if (verbose) {
             System.out.println("Write to " + outputFile + ": " + className);
         }
-
+        
         writeCssFile(new File(outputPath + File.separator + outputFile), cssClass);
+
+        if (htmlCreate) {
+            if (verbose) {
+                System.out.println("Write slice to HTML-File");
+            }
+            if (htmlFileWriter == null) {
+                htmlFileWriter = new HtmlFileWriter(new File(outputPath + File.separator + "overview.html"));
+            }
+            htmlFileWriter.addSlice(outputFile, className, slice);
+        }
     }
 
     private String getOutputFilename(Slice slice) {
@@ -73,9 +85,13 @@ public class CssWriter extends StylesheetWriter {
 
     @Override
     public void done() throws IOException {
-        for (FileWriter fileWriter : lessFiles.values()) {
+        for (FileWriter fileWriter : cssFiles.values()) {
             fileWriter.flush();
             fileWriter.close();
+        }
+
+        if (htmlFileWriter != null) {
+            htmlFileWriter.done();
         }
     }
 }

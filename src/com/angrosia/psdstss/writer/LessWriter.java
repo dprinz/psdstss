@@ -20,6 +20,11 @@ public class LessWriter extends StylesheetWriter{
         super(directory, prefix);
     }
 
+    @Override
+    public void setHtmlCreate(boolean htmlCreate) {
+        throw new IllegalArgumentException("There is no HTML available for less");
+    }
+
     private void writeLessFile(File file, String content, boolean needImport) throws IOException {
         String filename = file.getName();
         FileWriter fileWriter;

@@ -13,6 +13,7 @@ Extract the Slices from a PSD File and create a CSS or LESS stylesheet class str
 
       -f, --format    Set output format (css, less). Default: less
       -p, --prefix    Set the prefix of the classes. Default: sprite-
+          --html      Create a html site for testing the sprites (in css mode only).
       -v, --verbose   Show information about files and parsing etc.
 
 ## Example
@@ -23,6 +24,7 @@ Extract the Slices from a PSD File and create a CSS or LESS stylesheet class str
 
 beta state - *working*
 
+- v0.5 - add html writer for a test site
 - v0.4 - add css writer
 - v0.3 - add less writer
 

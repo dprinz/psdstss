@@ -204,7 +204,7 @@ public class sliceExtractor {
             "  -h, --help      Show this help.\r\n" +
             "  -f, --format    Set output format (css, less). Default: less\r\n" +
             "  -p, --prefix    Set the prefix of the classes. Default: sprite-\r\n" +
-            //"      --html      Create a html site for testing the sprites.\r\n" +
+            "      --html      Create a html site for testing the sprites.\r\n" +
             "  -v, --verbose   Show information about files and parsing etc.\r\n\r\n" +
             "Example: psdstss sprite.psd -f less -p org-logo-"
         );
