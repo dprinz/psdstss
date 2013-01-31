@@ -24,7 +24,7 @@ public abstract class StylesheetWriter {
         this.htmlCreate = htmlCreate;
     }
 
-    public abstract void writeSlice(Slice slice) throws Exception;
+    public abstract void writeSlice(Slice slice, String psdFile) throws Exception;
 
     public abstract void done() throws IOException;
 }

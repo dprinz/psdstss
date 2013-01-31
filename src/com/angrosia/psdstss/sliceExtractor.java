@@ -56,7 +56,12 @@ public class sliceExtractor {
             throw new Exception("There is no PSD-File to parse");
         }
 
-        StylesheetWriter stylesheetWriter = getStylesheetWriter(psdFiles.get(0).getParent(), prefix);
+        String targetPath = psdFiles.get(0).getParent().concat(File.separator).concat("style");
+        boolean success = (new File(targetPath)).mkdir();
+        if (!success) {
+            System.out.println("Could not create directory: " + targetPath);
+        }
+        StylesheetWriter stylesheetWriter = getStylesheetWriter(targetPath, prefix);
         stylesheetWriter.setVerbose(verbose);
         stylesheetWriter.setHtmlCreate(htmlCreate);
 
@@ -82,7 +87,7 @@ public class sliceExtractor {
                             System.out.println("  Size:     " + (slice.getRight() - slice.getLeft()) +
                                     " x " + (slice.getBottom() - slice.getTop()));
                         }
-                        stylesheetWriter.writeSlice(slice);
+                        stylesheetWriter.writeSlice(slice, psdFile.getName());
                     }
                 }
             }

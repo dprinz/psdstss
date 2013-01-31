@@ -1,6 +1,7 @@
 package com.angrosia.psdstss.writer;
 
 import com.angrosia.psdstss.model.PsdFileContent.Slice;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -22,7 +23,9 @@ public class LessWriter extends StylesheetWriter{
 
     @Override
     public void setHtmlCreate(boolean htmlCreate) {
-        throw new IllegalArgumentException("There is no HTML available for less");
+        if (htmlCreate) {
+            throw new IllegalArgumentException("There is no HTML available for less");
+        }
     }
 
     private void writeLessFile(File file, String content, boolean needImport) throws IOException {
@@ -42,12 +45,12 @@ public class LessWriter extends StylesheetWriter{
     }
 
     @Override
-    public void writeSlice(Slice slice) throws Exception {
+    public void writeSlice(Slice slice, String psdFile) throws Exception {
         if (isFirstSlice) {
             isFirstSlice = false;
             writeLessFile(new File(outputPath + File.separator + basicFilename),
                 ".sprite(@x, @y, @width, @height) {\r\n" +
-                "   background-image: url('/images/sprite.png');\r\n" +
+                "   background-image: url('../" + FilenameUtils.getBaseName(psdFile) + ".png');\r\n" +
                 "   background-position: (@x * -1) (@y * -1);\r\n" +
                 "   height: @height;\r\n" +
                 "   width: @width;\r\n" +

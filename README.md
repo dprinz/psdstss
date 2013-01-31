@@ -3,6 +3,15 @@ PSD Slices To StyleSheet (converter)
 
 Extract the Slices from a PSD File and create a CSS or LESS stylesheet class structure.
 
+## Quickstart
+
+For this quickstart you need the compiled jar file. You need to create this first.
+
+1. save **psd** as **png** *in photoshop*
+2. with console **go to** this **directory** with the psd and png file
+3. from console type: **java -jar psdstss.jar -f css --html**
+4. enjoy *(the styles are now in new created style-directory)*
+
 ## Usage
 
     psdstss [PSD-File]* [-f css|less] [-p class-prefix]
@@ -21,6 +30,10 @@ Extract the Slices from a PSD File and create a CSS or LESS stylesheet class str
     psdstss sprite.psd -f less -p org-logo-
 
 ## Version history
+
+final state
+
+- v1.0 - write output to specific directory
 
 beta state - *working*
 

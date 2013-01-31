@@ -1,6 +1,7 @@
 package com.angrosia.psdstss.writer;
 
 import com.angrosia.psdstss.model.PsdFileContent.Slice;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -37,7 +38,7 @@ public class CssWriter extends StylesheetWriter {
     }
 
     @Override
-    public void writeSlice(Slice slice) throws Exception {
+    public void writeSlice(Slice slice, String psdFile) throws Exception {
         Integer sliceWidth = slice.getRight() - slice.getLeft();
         Integer sliceHeight = slice.getBottom() - slice.getTop();
 
@@ -48,7 +49,7 @@ public class CssWriter extends StylesheetWriter {
         }
 
         String cssClass = "." + className + " {\r\n" +
-                "    background-image: url('sprite.png');\r\n" +
+                "    background-image: url('../" + FilenameUtils.getBaseName(psdFile) + ".png');\r\n" +
                 "    background-position: -" + slice.getLeft() + "px -" + slice.getTop() + "px;\r\n" +
                 "    height: " + sliceHeight + "px;\r\n" +
                 "    width: " + sliceWidth + "px;\r\n" +
